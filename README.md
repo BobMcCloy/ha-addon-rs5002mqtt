@@ -27,7 +27,7 @@ To install this add-on, you need to add this GitHub repository to your Home Assi
 2.  Click the menu (three dots) in the top right corner and select **Repositories**.
 3.  Paste the following URL into the text box and click **Add**:
     ```
-    [https://github.com/BobMcCloy/ha-addon-rs5002mqtt](https://github.com/BobMcCloy/ha-addon-rs5002mqtt)
+    https://github.com/BobMcCloy/ha-addon-rs5002mqtt
     ```
 4.  Close the dialog. The new repository will now appear at the bottom of the Add-on Store page.
 5.  Click on the **rs5002mqtt** add-on to open it.
