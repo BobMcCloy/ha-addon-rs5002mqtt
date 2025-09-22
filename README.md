@@ -25,7 +25,7 @@ Ein großer Teil der Logik zum Auslesen des USB-Geräts und zur Dekodierung der 
 2.  Klicke oben rechts auf das Menü (drei Punkte) und wähle **Repositories**.
 3.  Füge die folgende URL in das Textfeld ein und klicke auf **Hinzufügen**:
     ```
-    [https://github.com/BobMcCloy/ha-addon-rs5002mqtt](https://github.com/BobMcCloy/ha-addon-rs5002mqtt)
+    https://github.com/BobMcCloy/ha-addon-rs5002mqtt
     ```
 4.  Scrolle nach unten, bis du das "rs5002mqtt"-Repository siehst, und klicke auf das **rs5002mqtt** Add-on.
 5.  Klicke auf **Installieren** und warte, bis die Installation abgeschlossen ist.
