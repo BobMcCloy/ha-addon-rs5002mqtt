@@ -1,0 +1,2 @@
+# ELV Raumklimastation RS500
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5750", MODE="0664", GROUP="plugdev"

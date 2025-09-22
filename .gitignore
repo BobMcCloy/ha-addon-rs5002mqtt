@@ -1,0 +1,10 @@
+# Python Cache
+__pycache__/
+*.pyc
+
+# Editor-spezifische Ordner
+.vscode/
+.idea/
+
+# Lokale Konfigurationsdateien (falls vorhanden)
+.env
