@@ -14,4 +14,8 @@
 	sudo systemctl daemon-reload
 	sudo systemctl start rs500-mqtt
     ```
-6.  If there are errors, you can look at it at with ```journalctl -xeu rs500-mqtt```
+6.  If there are errors, you can look at it at with
+    ```
+    journalctl -xeu rs500-mqtt
+    ```
+
