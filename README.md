@@ -35,7 +35,7 @@ To install this add-on, you need to add this GitHub repository to your Home Assi
 
 ### Alternative installation
 
-If you're running Home Assistant in a Docker container, you may not have access to the Add-on Store. In this case you can still run the RS5002mqtt script separately, e.g. through a systemd service. This will post the messages to the MQTT service from where Home Assistant can pick them up, too.
+If you're running Home Assistant in a Docker container, you may not have access to the Add-on Store. In this case you can still run the RS5002mqtt script separately, e.g. through a systemd service on the docker host. This will post the messages to the MQTT service from where Home Assistant can pick them up, too.
 
 See [Run as systemd service](run_as_systemd_service.md)
 
