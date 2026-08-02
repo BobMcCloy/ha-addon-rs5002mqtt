@@ -1,47 +1,21 @@
 from typing import Sequence, Optional, Dict
+from dataclasses import dataclass
 
-
-class TempHum(object):
-    def __init__(self, temp: float, hum: int):
-        self.__temperature = temp
-        self.__humidity = hum
-
-    @property
-    def temperature(self):
-        return self.__temperature
-
-    @temperature.setter
-    def temperature(self, temp: float):
-        self.__temperature = temp
-
-    @property
-    def humidity(self):
-        return self.__humidity
-
-    @humidity.setter
-    def humidity(self, hum: int):
-        self.__humidity = hum
+@dataclass
+class TempHum:
+    temperature: float
+    humidity: int
 
     @staticmethod
     def from_protocol(temp: Sequence[int], hum: int) -> "TempHum":
         return TempHum(float(int.from_bytes(temp, byteorder="big", signed=True)) / 10.0, hum)
 
-
-class Response(object):
+class Response:
     def __init__(self):
-        self.__data: Dict[int, Optional[TempHum]] = {
-            1: None,
-            2: None,
-            3: None,
-            4: None,
-            5: None,
-            6: None,
-            7: None,
-            8: None,
-        }
+        self.__data: Dict[int, Optional[TempHum]] = {i: None for i in range(1, 9)}
 
     def get_channel_data(self, channel: int) -> Optional[TempHum]:
-        return self.__data[channel]
+        return self.__data.get(channel)
 
     def set_channel_data(self, channel: int, data: TempHum):
         self.__data[channel] = data
