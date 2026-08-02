@@ -42,24 +42,22 @@ See [Run as systemd service](run_as_systemd_service.md)
 ---
 ### Configuration
 
-**Important:** This add-on uses a **hardcoded configuration**. There is no configuration via the Home Assistant UI. If you need to change the MQTT credentials, you must edit the `reader.py` file directly.
+The Add-on can be easily configured via the Home Assistant Add-on UI.
 
-The relevant section is at the top of the `rs5002mqtt/reader.py` file:
+Available Options:
+- **`mqtt_host`**: Your MQTT broker address (e.g., `core-mosquitto` or `192.168.1.x`)
+- **`mqtt_user`**: MQTT username
+- **`mqtt_password`**: MQTT password
+- **`read_interval`**: The interval in seconds to read from the USB device (Default: `60`)
 
-```python
-# =================================================================
-# HARDCODED CREDENTIALS - CHANGE HERE
-# =================================================================
-CONFIG_MQTT_HOST = "core-mosquitto"
-CONFIG_MQTT_USER = "rs5002mqtt"
-CONFIG_MQTT_PASSWORD = "rs5002mqtt"
-# =================================================================
-
-After editing the file, you must **rebuild** the add-on for the changes to take effect.
+The add-on automatically handles:
+- **MQTT Availability (LWT):** Sensors correctly show as `unavailable` if the add-on is stopped or crashes.
+- **Graceful Shutdown:** The USB device is cleanly released and MQTT disconnects properly.
 
 Starting the Add-on
 1.  Navigate to the add-on's page.
-2.  Click Start. The add-on will connect to the MQTT broker using the credentials specified in the reader.py file.
+2.  Set your Configuration options.
+3.  Click Start. The add-on will connect to the MQTT broker using your settings.
 
 
 
