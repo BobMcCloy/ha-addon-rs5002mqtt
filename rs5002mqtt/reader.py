@@ -19,12 +19,21 @@ logging.basicConfig(
 logger = logging.getLogger("RS5002MQTT")
 
 # =================================================================
-# ZUGANGSDATEN AUS UMGEBUNGSVARIABLEN (HOME ASSISTANT CONFIG)
+# ZUGANGSDATEN (HA OPTIONS ODER UMGEBUNGSVARIABLEN)
 # =================================================================
-CONFIG_MQTT_HOST = os.environ.get('MQTT_HOST', 'core-mosquitto')
-CONFIG_MQTT_USER = os.environ.get('MQTT_USER', '')
-CONFIG_MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD', '')
-READ_INTERVAL = int(os.environ.get('READ_INTERVAL', 60))
+OPTIONS_FILE = "/data/options.json"
+if os.path.exists(OPTIONS_FILE):
+    with open(OPTIONS_FILE) as f:
+        options = json.load(f)
+    CONFIG_MQTT_HOST = options.get('mqtt_host', 'core-mosquitto')
+    CONFIG_MQTT_USER = options.get('mqtt_user', '')
+    CONFIG_MQTT_PASSWORD = options.get('mqtt_password', '')
+    READ_INTERVAL = int(options.get('read_interval', 60))
+else:
+    CONFIG_MQTT_HOST = os.environ.get('MQTT_HOST', 'core-mosquitto')
+    CONFIG_MQTT_USER = os.environ.get('MQTT_USER', '')
+    CONFIG_MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD', '')
+    READ_INTERVAL = int(os.environ.get('READ_INTERVAL', 60))
 # =================================================================
 
 MQTT_AVAILABILITY_TOPIC = "rs500/status"
