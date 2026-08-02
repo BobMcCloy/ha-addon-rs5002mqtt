@@ -1,0 +1,8 @@
+[Unit]
+Description=RS500 data logger to MQTT
+
+[Service]
+ExecStart=/opt/rs5002mqtt/run_service.sh
+
+[Install]
+WantedBy=multi-user.target
