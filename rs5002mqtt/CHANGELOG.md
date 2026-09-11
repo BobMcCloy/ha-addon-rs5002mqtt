@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.3
+- **FIX**: Availability (`rs500/status` = `online`) und die HA-Discovery-Configs wurden bisher nur einmalig direkt nach dem allerersten MQTT-Connect publiziert. Riss die Verbindung danach kurz ab (Netzwerk-Hänger, Broker-Neustart, Keepalive-Timeout, ...), feuerte der Broker das Last-Will-Testament (`offline`, retained) und **alle 16 Sensor-Entitäten blieben in Home Assistant dauerhaft `unavailable`**, obwohl das Add-on über den automatischen Paho-Reconnect klaglos weiter Daten gelesen und publiziert hat. Sichtbar wurde das erst nach einem manuellen Neustart des Add-ons.
+  Availability + Discovery werden jetzt über einen `on_connect`-Callback bei jedem (Re-)Connect neu publiziert, nicht mehr nur beim Erststart.
+- **FIX**: Kürzerer Reconnect-Backoff (`reconnect_delay_set(1, 30)`), damit ein Verbindungsabriss schneller behoben wird.
+
 ## 1.1.2
 - **FIX**: Korrektur des Start-Skripts (`run.sh` Shebang) für die Ausführung in der Python-Basisumgebung.
 

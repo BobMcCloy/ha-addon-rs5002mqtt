@@ -155,15 +155,49 @@ class Rs500Reader:
                 response.set_channel_data(channel, TempHum.from_protocol([t1, t2], hu))
         return response
 
+def on_connect(client, userdata, flags, rc, properties=None):
+    """
+    Wird bei JEDEM erfolgreichen (Re-)Connect aufgerufen - auch nach einem
+    automatischen Reconnect durch paho's loop_start()-Thread, nicht nur beim
+    allerersten Start.
+
+    Das ist wichtig, weil der Broker bei einem unsauberen Verbindungsabbruch
+    (Netzwerk-Hänger, Broker-Neustart, Keepalive-Timeout, ...) automatisch das
+    Last-Will-Testament (offline, retained) auf MQTT_AVAILABILITY_TOPIC
+    publiziert. Ohne diesen Callback wurde "online" bisher nur einmalig direkt
+    nach dem ersten Start gesendet - nach einem späteren Reconnect blieb der
+    Availability-Status dauerhaft auf "offline" hängen, obwohl der Reader
+    weiterhin klaglos Daten gelesen und publiziert hat. Home Assistant zeigte
+    dadurch alle 16 Entitäten als "unavailable", bis das Add-on manuell neu
+    gestartet wurde.
+    """
+    if rc == 0:
+        logger.info("MQTT (wieder-)verbunden - publiziere Availability + Discovery...")
+        client.publish(MQTT_AVAILABILITY_TOPIC, payload="online", retain=True)
+        publish_ha_discovery_config(client)
+    else:
+        logger.error(f"MQTT Verbindung fehlgeschlagen, rc={rc}")
+
+def on_disconnect(client, userdata, rc, properties=None):
+    if rc != 0:
+        logger.warning(f"MQTT Verbindung unerwartet verloren (rc={rc}). Paho versucht automatisch, neu zu verbinden...")
+
 if __name__ == "__main__":
     logger.info("Starte RS5002MQTT Add-on...")
-    
+
     client = mqtt.Client("RS5002MQTT")
     client.username_pw_set(CONFIG_MQTT_USER, CONFIG_MQTT_PASSWORD)
-    
+
     # Last Will and Testament (LWT)
     client.will_set(MQTT_AVAILABILITY_TOPIC, payload="offline", retain=True)
-    
+
+    # Bei jedem (Re-)Connect Availability + Discovery neu publizieren,
+    # nicht nur einmalig beim Erststart (siehe Docstring von on_connect).
+    client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+    # Nach einem Abriss zügig neu verbinden statt mit wachsendem Backoff zu warten.
+    client.reconnect_delay_set(min_delay=1, max_delay=30)
+
     connected = False
     while not connected and RUNNING:
         try:
@@ -178,9 +212,9 @@ if __name__ == "__main__":
     if not RUNNING:
         sys.exit(0)
 
-    client.publish(MQTT_AVAILABILITY_TOPIC, payload="online", retain=True)
-    publish_ha_discovery_config(client)
-    
+    # Availability + Discovery werden jetzt vom on_connect-Callback übernommen
+    # (feuert auch für diesen ersten Connect).
+
     reader = Rs500Reader()
     logger.info(f"Starte Hauptschleife zum Auslesen der Daten (Intervall: {READ_INTERVAL}s)...")
     
